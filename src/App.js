@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { QueryBuilder, formatQuery } from "react-querybuilder";
+import "react-querybuilder/dist/query-builder.css";
 
-function App() {
+const fields = [
+  { name: "isWarranty", label: "Is Warranty", type: "boolean" },
+  {
+    name: "FILECOUNT",
+    label: "File Count",
+    type: "string",
+    values: ["Warranty Report Form", "COFC", "FORM ONE"],
+  },
+];
+
+export default function App() {
+  const [query, setQuery] = useState({
+    combinator: "and",
+    rules: [
+      { field: "isWarranty", operator: "=", value: true },
+      { field: "FILECOUNT", operator: "in", value: "Warranty Report Form" },
+    ],
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <QueryBuilder fields={fields} query={query} onQueryChange={setQuery} />
+      <h4>
+        CEL as result of <code>{formatQuery(query, "cel")}</code>:
+      </h4>
+      <pre>{formatQuery(query, "cel")}</pre>
+    </>
   );
 }
-
-export default App;
